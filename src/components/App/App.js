@@ -3,57 +3,16 @@ import './App.css';
 import {SearchBar} from '../SearchBar/SearchBar';
 import {SearchResults} from '../SearchResults/SearchResults'
 import { Playlist } from '../PlayList/PlayList';
-import Spotify from '../../utils/Spotify'
+import Spotify from '../../utils/Spotify';
 
 class App extends React.Component {
   
   constructor(props){
     super(props); 
     this.state= {
-      searchResults: [
-        {
-            name: 'Strong',
-            artist: 'Britney Spears ',
-            album: 'Oops!... I Did It Again',
-            id: '1'
-        },
-        {
-            name: 'Sandro',
-            artist: 'Britney Spears ',
-            album: 'Oops!... I Did It Again',
-            id: '2'
-        },
-        {
-            name: 'Linda',
-            artist: 'Britney Spears ',
-            album: 'Oops!... I Did It Again',
-            id: '3'
-        },
-      ],
-
-      playlistName: 'My Play List',
-
-      playlistTracks: [
-        {
-          id:'7',
-          name: 'Song1',
-          artist: 'artistName1',
-          album: 'albumName1'
-        },
-        {
-          id:'8',
-          name: 'Song2',
-          artist: 'artistName2',
-          album: 'albumName2'
-        },
-        {
-          id:'10',
-          name: 'Song3',
-          artist: 'artistName3',
-          album: 'albumName3'
-        }
-
-      ],
+      searchResults: [],
+      playlistName: 'My Playlist',
+      playlistTracks: [],
     }
     this.addTrack = this.addTrack.bind(this);
     this.removeTrack = this.removeTrack.bind(this);
@@ -93,11 +52,18 @@ class App extends React.Component {
   }
 
   savePlaylist(){
-    
     const trackURIs = this.state.playlistTracks.map(track => track.uri);
+
+    Spotify.savePlaylist(this.state.playlistName, trackURIs).then(() =>{
+      this.setState({
+        playlistName: 'New Playlist',
+        playlistTracks: []
+      })
+    })
   }
 
   search(term){
+    console.log('this is the search method of App.js')
    Spotify.search(term)
    .then(res => 
      this.setState({
